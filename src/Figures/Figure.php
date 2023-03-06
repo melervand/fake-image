@@ -130,18 +130,28 @@ abstract class Figure implements Layerable, Savable
      * @param string $path
      * @param int    $quality
      *
+     * @return string
      * @throws \Exception
      */
-    public function saveAsFile(string $path, int $quality = 90)
+    public function saveAsFile(string $path, int $quality = 90): string
     {
         $image = $this->toResource();
 
+        $path = \str_replace(['\\', '/'], \DIRECTORY_SEPARATOR, $path);
+        $hasFilename = \substr($path, -1) !== \DIRECTORY_SEPARATOR;
+
         $pathInfo = pathinfo($path);
+
         $pathInfo = [
-            'dirname'   => $pathInfo[ 'dirname' ] ?? '.' . DIRECTORY_SEPARATOR,
-            'filename'  => $pathInfo[ 'filename' ] ?? bin2hex(random_bytes(16)),
+            'dirname'   => $hasFilename
+                ? $pathInfo[ 'dirname' ]
+                : \rtrim($path, '\\/'),
+            'filename'  => $hasFilename
+                ? $pathInfo[ 'filename' ]
+                : bin2hex(random_bytes(16)),
             'extension' => $pathInfo[ 'extension' ] ?? self::TYPE_PNG,
         ];
+
         $path = $pathInfo[ 'dirname' ] . DIRECTORY_SEPARATOR . $pathInfo[ 'filename' ] . '.' . $pathInfo[ 'extension' ];
 
         switch ($pathInfo[ 'extension' ]) {
@@ -152,5 +162,7 @@ abstract class Figure implements Layerable, Savable
             default:
                 imagepng($image, $path);
         }
+
+        return $path;
     }
 }

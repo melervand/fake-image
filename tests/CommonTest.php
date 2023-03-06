@@ -1,6 +1,7 @@
 <?php
 
 use FakeImage\Color;
+use FakeImage\Facades\Placeholder;
 use FakeImage\Figures\Text;
 use FakeImage\Image;
 use PHPUnit\Framework\TestCase;
@@ -45,5 +46,29 @@ class CommonTest extends TestCase
              ->saveAsFile('./tests/images/image.png');
 
         $this->assertFileExists('./tests/images/image.png');
+    }
+
+    public function testWithoutFilename()
+    {
+        $path = Placeholder::withSize(256, 256)
+                           ->saveAsFile('./tests/images/');
+
+        $this->assertFileExists($path);
+    }
+
+    public function testWithoutExtension()
+    {
+        $path = Placeholder::withSize(256, 256)
+                           ->saveAsFile('./tests/images/wo_ext');
+
+        $this->assertFileExists($path);
+    }
+
+    public function testJpegExtension()
+    {
+        $path = Placeholder::withSize(256, 256)
+                           ->saveAsFile('./tests/images/w_jpg.jpg');
+
+        $this->assertFileExists($path);
     }
 }
