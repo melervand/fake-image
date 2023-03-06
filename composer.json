@@ -1,6 +1,6 @@
 {
-  "name": "melervand/image-faker",
-  "description": "Package to generate fake images",
+  "name": "melervand/fake-image",
+  "description": "Local generation of placeholder images",
   "authors": [
     {
       "name": "Ervand Melikian",
